@@ -155,7 +155,7 @@ config t
    Int Fa 0/0
      no shutdown
 	 ip add 10.51.100.8 255.255.255.0 
-	 en
+	 end
 
 !!!CUCM ANALOG PHONES CONFIG
 configure terminal
