@@ -11,7 +11,7 @@ add-DnsServerResourceRecord -zonename remoteM.com -A -name srv-M
                                                 -ipv4address 192.168.m.1
 ping srv-M.remoteM.com
 
-add-DnsServerResourceRecond -zonename remoteM.com -Cname -name www
+add-DnsServerResourceRecord -zonename remoteM.com -Cname -name www
                                     -hostname srv-M.remoteM.com
 ping www.remoteM.com
 
