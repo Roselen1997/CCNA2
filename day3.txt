@@ -34,6 +34,12 @@ ip dhcp pool vlan10
   network 10.2.1.0 255.255.255.0
   default-router 10.2.1.254
 !
+#ipasok d2 port e1/0 sa vlan 20
+config t
+int e1/0
+  switchport mode access
+  switchport access vlan 200
+  do show vlan brief
 A1: lipat vlan from v1 to v10
 config t
 int e0/0
