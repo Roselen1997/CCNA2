@@ -5,7 +5,19 @@ r1 to r4: ospf 1:
 config t
  no router ospf 1
  do sh ip protocols
-
+### give IP address to S1 and S2:
+@@S1
+config t
+int e1/0
+  no shut
+  ip address 192.168.1.133 255.255.255.224
+do bp
+@@S2
+config t
+int e1/0
+  no shut
+  ip address 10.2.2.133 255.255.255.0
+do bp
 R4
 config t
  no router eigrp 100
