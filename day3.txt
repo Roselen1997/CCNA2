@@ -95,7 +95,7 @@ int e1/0
  no shut
 P2: creating static route on p1 for vlan200 and a longest prefix rule for 192.168.1.129 gateway of 10.2.1.1:
 config t
-ip route 192.168.1.128 255.255.255.224 10.2.1.2 1
+ip route 192.168.1.128 255.255.255.224 10.2.1.2 
 ip route 192.168.1.129 255.255.255.255 10.2.1.1 
 do sh ip route static
 Pano mag static Route sa PC:
