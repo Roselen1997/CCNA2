@@ -1,0 +1,218 @@
+Ex1 Create a web firewall so that only http:80 and ping is open on web8.com while
+https:443 and telnet:23 is open on web9.com
+
+config t
+NO IP access-list Extended fwpolicy1
+IP access-list Extended fwpolicy1
+ permit Tcp Any host 192.168.103.8 Eq 80 log
+ permit icmp Any host 192.168.103.8 log
+ permit Tcp Any host 192.168.103.9 Eq 443 log
+ permit Tcp Any host 192.168.103.9 Eq 23 log
+ deny ip any any log
+ do sh ip access-list fwpolicy1
+ Int Gi3
+  ip access-group fwpolicy1 IN
+  end
+
+_______________________________________________________________________
+
+Ex 2 Create a web firewall so that only "FWP2"
+SSH:22 and DNS:53 is open on web8.com while
+http:80 and HTTPS:443 and ping is open on web9.com
+
+config t
+NO IP access-list Extended FWP2
+IP access-list Extended FWP2
+ permit Tcp Any host 192.168.103.8 Eq 22 log
+ permit Tcp Any host 192.168.103.8 Eq 53 log
+!
+ permit Tcp Any host 192.168.103.9 Eq 80 log
+ permit Tcp Any host 192.168.103.9 Eq 443 log
+ permit icmp Any host 192.168.103.8 log
+ deny ip any any log
+ do sh ip access-list FWP2
+ Int Gi3
+  ip access-group FWP2 IN
+  end
+
+__________________________________________________________________________
+
+Ex 3 Create a web firewall so that only BANTAY3
+ping, http:80, telnet:23 is open on web8.com while 
+dns:53, ftp:21, https:443 ping is open on web9.com
+
+config t
+NO IP access-list Extended BANTAY3
+IP access-list Extended BANTAY3
+ permit icmp Any host 192.168.103.8 log
+ permit Tcp Any host 192.168.103.8 Eq 80 log
+ permit Tcp Any host 192.168.103.8 Eq 23 log
+!
+ permit Tcp Any host 192.168.103.9 Eq 53 log
+ permit Tcp Any host 192.168.103.9 Eq 21 log
+ permit Tcp Any host 192.168.103.8 Eq 443 log
+ deny ip any any log
+ do sh ip access-list BANTAY3
+ Int Gi3
+  ip access-group BANTAY3 IN
+  end
+
+to check: nmap -Pn -v www.web8.com
+
+___________________________________________________________________________
+
+Ex 4 Create a web firewall so that only SUPEReasy4
+ping, http, telnet, ftp is open on web8.com while 
+http, https, ssh, ping is open on web9.com
+
+config t
+NO IP access-list Extended BANTAY3
+IP access-list Extended BANTAY3
+ permit icmp Any host 192.168.103.8 log
+ permit Tcp Any host 192.168.103.8 Eq 80 log
+ permit Tcp Any host 192.168.103.8 Eq 23 log
+ permit Tcp Any host 192.168.103.8 Eq 21 log
+!
+ permit Tcp Any host 192.168.103.9 Eq 80 log
+ permit Tcp Any host 192.168.103.9 Eq 443 log
+ permit Tcp Any host 192.168.103.9 Eq 22 log
+ permit icmp Any host 192.168.103.9 log
+ deny ip any any log
+ do sh ip access-list BANTAY3
+ Int Gi3
+  ip access-group BANTAY3 IN
+  end
+
+___________________________________________________________________________
+
+
+Ex 5 Create a web firewall so that only THELASTP
+http,dns,ftp is open on web8.com while 
+telnet,ssh,https is open on web9.com
+
+config t
+NO IP access-list Extended THELASTP
+IP access-list Extended THELASTP
+ permit Tcp Any host 192.168.103.8 Eq 80
+ permit Tcp Any host 192.168.103.8 Eq 53
+ permit Tcp Any host 192.168.103.8 Eq 21
+!
+ permit Tcp Any host 192.168.103.9 Eq 23
+ permit Tcp Any host 192.168.103.9 Eq 22
+ permit Tcp Any host 192.168.103.9 Eq 443
+ deny ip any any log
+ do sh ip access-list THELASTP
+ Int Gi3
+  ip access-group THELASTP IN
+  end
+
+_______________________________________________________________________________
+
+Task 6 Use firewall policy to block all pornsites in your org
+step1: give internet to UTMPINAS, pt dns to porn site bilis DNS: 1.1.1.1
+
+config t
+ip route 0.0.0.0 0.0.0.0 192.168.108.2
+ip domain lookup
+ip name-server 1.1.1.1
+
+
+config t
+NO ip access-list standard NOSOC
+ip access-list Extended NOSOC
+deny ip 163.70.0.0  0.0.255.255 any
+deny ip 23.59.0.0  0.0.255.255 any
+deny ip 104.244.0.0  0.0.255.255 any
+permit ip any any 
+Int Gi1
+ NO ip access-group NOSOC IN
+end
+
+
+___________________________________________________________________________
+
+Give blgdPinas4: ph private
+
+ifconfig eth0 192.168.102.18 netmask 255.255.255.0 up
+route add default gw 192.168.102.8
+ping 192.168.102.8
+
+@give internet bldgpinas and bldgpinas4 using NAT:
+!define NAT inside and outside:
+config t
+int gi 1
+ip nat outside
+int gi 2
+ip nat outside
+int gi 3
+ip nat outside
+!create standard access-list to allow all blgd
+access-list 3 permit 192.168.102.0 0.0.0.255
+access-list 3 permit 192.168.103.0 0.0.0.255
+!create a static NAT pool and NAT overload:
+ip nat inside source static 192.168.103.18 192.168.108.69
+ip nat inside source static 192.168.102.18 192.168.108.77
+ip nat inside source list 3 interface gi 1 overload
+end
+
+
+config t
+ntp server time.google.com
+end
+show ntp association
+show clock
+
+
+______________________________________________________________________________
+
+how to configure ipv6 on cisco devices:
+
+config t
+ipv6 unicast-routing
+int gi 2
+ ipv6 enable
+ ipv6 address cafe:face:baba:fafa::aaaa/64
+int gi3 
+ ipv6 enable
+ ipv6 address b3b3:cdfa:a001:fabc::dddd/64
+do sh ipv6 int brief
+
+_______________________________________________________________________________
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
